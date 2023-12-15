@@ -17,8 +17,9 @@ namespace NetworkSniffer.Headers
         //End TCP header fields
 
         private readonly byte _headerLength;                        //Header length
+        private readonly byte[] _headerData = Array.Empty<byte>();  //Data carried by the TCP Header packet
         private readonly ushort _messageLength;                     //Length of the data being carried
-        private readonly byte[] _tcpData = Array.Empty<byte>();     //Data carried by the TCP packet
+        private readonly byte[] _payloadData = Array.Empty<byte>();     //Data carried by the TCP packet
 
         public TCPHeader(byte[] byBuffer, int nReceived)
         {
@@ -56,17 +57,29 @@ namespace NetworkSniffer.Headers
                 _headerLength = (byte)(_dataOffsetAndFlags >> 12);
                 _headerLength *= 4;
 
+                //Copy the TCP header data into the buffer
+                _headerData = new byte[_headerLength];
+
+                Buffer.BlockCopy
+                    (
+                        byBuffer,
+                        0,
+                        _headerData,
+                        0,
+                        _headerLength
+                    );
+
                 //Message length = Total length of the TCP packet - Header length
                 _messageLength = (ushort)(nReceived - _headerLength);
 
                 //Copy the TCP data into the data buffer
-                _tcpData = new byte[_messageLength];
+                _payloadData = new byte[_messageLength];
 
                 Buffer.BlockCopy
                     (
                         byBuffer,
                         _headerLength,
-                        _tcpData,
+                        _payloadData,
                         0,
                         _messageLength
                     );
@@ -186,7 +199,9 @@ namespace NetworkSniffer.Headers
         //Return the checksum in hexadecimal format
         public string Checksum => string.Format("0x{0:x2}", _checksum);
 
-        public byte[] Data => _tcpData;
+        public byte[] HeaderData => _headerData;
+
+        public byte[] PayloadData => _payloadData;
 
         public ushort MessageLength => _messageLength;
     }

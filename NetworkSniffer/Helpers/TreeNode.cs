@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace NetworkSniffer.Helpers
+﻿namespace NetworkSniffer.Helpers
 {
     internal sealed class TreeNode
     {

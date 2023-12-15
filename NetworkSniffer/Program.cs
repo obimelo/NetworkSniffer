@@ -4,9 +4,9 @@
     {
         static void Main(string[] args)
         {
-            using (PacketCapture pc = new(50, "192.168.39.16"))
+            using (PacketCapture pc = new(50, "10.50.111.136"))
             {
-                pc.StartCapturing(true);
+                pc.StartCapturing(false);
             }
 
             Console.WriteLine("FINISH");

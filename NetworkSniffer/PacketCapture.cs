@@ -124,7 +124,7 @@ namespace NetworkSniffer
                     // Note: DNS can use either TCP or UDP thats why the check is done twice
                     if (tcpHeader.DestinationPort == "53" || tcpHeader.SourcePort == "53")
                     {
-                        TreeNode dnsNode = MakeDNSTreeNode(tcpHeader.Data, (int)tcpHeader.MessageLength);
+                        TreeNode dnsNode = MakeDNSTreeNode(tcpHeader.HeaderData, (int)tcpHeader.MessageLength);
                         rootNode.Nodes.Add(dnsNode);
                     }
 
@@ -211,7 +211,8 @@ namespace NetworkSniffer
             if (tcpHeader.UrgentPointer != "")
                 tcpNode.Nodes.Add("Urgent Pointer: " + tcpHeader.UrgentPointer);
 
-            tcpNode.Nodes.Add("Data: " + ByteArrayToString(tcpHeader.Data));
+            tcpNode.Nodes.Add("Header Data: " + ByteArrayToString(tcpHeader.HeaderData));
+            tcpNode.Nodes.Add("Payload Data: " + ByteArrayToString(tcpHeader.PayloadData));
 
             return tcpNode;
         }
